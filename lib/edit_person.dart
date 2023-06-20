@@ -15,6 +15,7 @@ class EditPerson extends StatefulWidget {
 
 class _EditPersonState extends State<EditPerson> {
   TextEditingController nameEditingController = TextEditingController();
+  TextEditingController phoneEditingController = TextEditingController();
   TextEditingController cityEditingController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -24,7 +25,8 @@ class _EditPersonState extends State<EditPerson> {
     super.initState();
     if (widget.edit == true) {
       nameEditingController.text = widget.person.name;
-      cityEditingController.text = widget.person.phone;
+      phoneEditingController.text = widget.person.phone;
+      cityEditingController.text = widget.person.state;
     }
   }
 
@@ -43,12 +45,18 @@ class _EditPersonState extends State<EditPerson> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   FlutterLogo(
-                    size: 300,
+                    size: 100,
                   ),
                   textFormField(nameEditingController, "Name", "Enter Name",
-                      Icons.person, widget.edit ? widget.person.name : "s"),
-                  textFormField(cityEditingController, "City", "Enter City",
-                      Icons.place, widget.edit ? widget.person.phone : "jk"),
+                      Icons.person, widget.edit ? widget.person.name : "a"),
+                  textFormField(
+                      phoneEditingController,
+                      "Telefono",
+                      "Enter Telefono",
+                      Icons.place,
+                      widget.edit ? widget.person.phone : "q"),
+                  textFormField(cityEditingController, "Ciudad", "Enter City",
+                      Icons.place, widget.edit ? widget.person.phone : "e"),
                   ElevatedButton(
                     onPressed: () async {
                       if (!_formKey.currentState!.validate()) {
@@ -58,18 +66,18 @@ class _EditPersonState extends State<EditPerson> {
                       } else if (widget.edit == true) {
                         PersonDatabaseProvider.db.updatePerson(Person(
                             name: nameEditingController.text,
-                            phone: cityEditingController.text,
+                            phone: phoneEditingController.text,
                             id: widget.person.id,
-                            code: '',
-                            state: ''));
+                            code: "asd",
+                            state: cityEditingController.text));
                         Navigator.pop(context);
                       } else {
                         await PersonDatabaseProvider.db.addPersonToDatabase(
                             Person(
                                 id: 0,
                                 name: nameEditingController.text,
-                                phone: cityEditingController.text,
-                                code: cityEditingController.text,
+                                phone: phoneEditingController.text,
+                                code: "asd",
                                 state: cityEditingController.text));
                         Navigator.pop(context);
                       }

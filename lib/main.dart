@@ -40,11 +40,17 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           ElevatedButton(
             onPressed: () {
+              // TODO
+            },
+            child: Text('Pantalla Nueva'),
+          ),
+          ElevatedButton(
+            onPressed: () {
               PersonDatabaseProvider.db.deleteAllPersons();
               setState(() {});
             },
             child: Text('Delete all'),
-          ),
+          )
         ],
       ),
       body: FutureBuilder<List<Person>>(

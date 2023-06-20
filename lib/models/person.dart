@@ -13,17 +13,14 @@ class Person {
     required this.state,
   });
 
-  factory Person.fromMap(Map<String, dynamic> json) => new Person(
+  factory Person.fromMap(Map<String, dynamic> json) => Person(
         id: json["id"],
         name: json["name"],
         phone: json["phone"],
-        code: json["phone"],
-        state: json["phone"],
+        code: json["code"],
+        state: json["state"],
       );
 
-  Map<String, dynamic> toMap() => {
-        "id": id,
-        "name": name,
-        "phone": phone,
-      };
+  Map<String, dynamic> toMap() =>
+      {"id": id, "name": name, "phone": phone, "code": code, "state": state};
 }

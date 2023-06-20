@@ -26,7 +26,9 @@ class PersonDatabaseProvider {
       await db.execute("CREATE TABLE Person ("
           "id integer primary key AUTOINCREMENT,"
           "name TEXT,"
-          "phone TEXT"
+          "code TEXT,"
+          "phone TEXT,"
+          "state TEXT"
           ")");
     });
   }
