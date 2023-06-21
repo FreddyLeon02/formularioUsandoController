@@ -1,6 +1,6 @@
 import 'package:database/DBHelper.dart';
 
-class Conection {
+class Connection {
   DBHelper dbHelper = DBHelper();
 
   Future<int> save(String name) async {
@@ -10,10 +10,10 @@ class Conection {
     return result;
   }
 
-  Future<List> getAll() async {
+  Future<List<Map<String, dynamic>>> getAll() async {
     var dbClient = await dbHelper.db;
     var result = await dbClient.query('Test', columns: ['id', 'name']);
-    return result.toList();
+    return result;
   }
 
   Future<int> update(int id, String name) async {

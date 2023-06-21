@@ -1,5 +1,7 @@
 import 'package:database/database.dart';
+import 'package:database/edit_animal.dart';
 import 'package:database/edit_person.dart';
+import 'package:database/models/animal.dart';
 import 'package:database/models/person.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +42,10 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           ElevatedButton(
             onPressed: () {
-              // TODO
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DetailScreen()),
+              );
             },
             child: Text('Pantalla Nueva'),
           ),
@@ -100,6 +105,62 @@ class _MyHomePageState extends State<MyHomePage> {
                           phone: "phone",
                           code: "code",
                           state: "state"),
+                    )));
+          }),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Animal Pantalla'),
+      ),
+      body: FutureBuilder<List<Animal>>(
+        future: AnimalDatabaseProvider.db.getAllAnimal(),
+        builder: (BuildContext context, AsyncSnapshot<List<Animal>> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              physics: BouncingScrollPhysics(),
+              itemCount: snapshot.data?.length,
+              itemBuilder: (BuildContext context, int index) {
+                Animal item = snapshot.data![index];
+                return Dismissible(
+                  key: UniqueKey(),
+                  background: Container(color: Colors.red),
+                  onDismissed: (direction) {
+                    AnimalDatabaseProvider.db.deleteAnimalWithId(item.id);
+                  },
+                  child: ListTile(
+                    title: Text(item.name),
+                    subtitle: Text(item.type),
+                    leading: CircleAvatar(child: Text(item.id.toString())),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => EditAnimal(
+                                true,
+                                animal: item,
+                              )));
+                    },
+                  ),
+                );
+              },
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => EditAnimal(
+                      false,
+                      animal: Animal(
+                          id: 0, name: "test", type: "type", place: "place"),
                     )));
           }),
     );

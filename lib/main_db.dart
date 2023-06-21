@@ -1,12 +1,12 @@
-import 'package:database/conextion.dart';
 import 'package:flutter/material.dart';
+import 'package:database/connection.dart'; // Asumiendo que el archivo se llama "connection.dart"
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  Conection crud = Conection();
+  final Connection crud = Connection();
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +16,20 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('CRUD Example'),
         ),
-        body: FutureBuilder<List>(
-          future: crud.getAll(),
-          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-            if (snapshot.hasData) {
+        body: FutureBuilder<List<Map<String, dynamic>>>(
+          future: crud
+              .getAll(), // Asumiendo que getAll() devuelve una lista de mapas
+          builder: (BuildContext context,
+              AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else if (snapshot.hasData) {
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -28,8 +38,11 @@ class MyApp extends StatelessWidget {
                   );
                 },
               );
+            } else {
+              return Center(
+                child: Text('No data found.'),
+              );
             }
-            return CircularProgressIndicator();
           },
         ),
       ),
